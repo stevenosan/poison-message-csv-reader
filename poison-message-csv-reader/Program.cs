@@ -1,20 +1,27 @@
 ﻿using CsvHelper;
 using System.Globalization;
 
-Console.WriteLine("Hello, World!");
-
 using (var reader = new StreamReader("c:\\Users\\steve\\Downloads\\PoisonMessages.csv"))
 using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
 {
     var records = csvReader.GetRecords<PoisonMessage>().ToList();
-    Console.WriteLine($"Record count: {records.Count()}");
-
-    Console.WriteLine("iterating over records");
     var groupedRecords = records.GroupBy(r => r.ConvertedDatetime);
 
     foreach (var groupedRecord in groupedRecords)
     {
-        Console.WriteLine($"Grouped Record DateTime: {groupedRecord.Key} | Group Count: {groupedRecord.Count()}");
+        if (groupedRecord.Count() > 50)
+        {
+            Console.WriteLine($"Large Dataset Date: {groupedRecord.Key} | Count: {groupedRecord.Count()}");
+            
+            var groupedByFailure = groupedRecord.GroupBy(r => r.FailureCause);
+            if (groupedByFailure.Count() > 10)
+            {
+                foreach (var failure in groupedByFailure)
+                {
+                    Console.WriteLine($"Failure: {failure.Key.Substring(0, 150)} | Count: {failure.Count()}");
+                }
+            }
+        }
     }
 }
 
