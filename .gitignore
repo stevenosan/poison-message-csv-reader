@@ -2,3 +2,5 @@
 poison-message-csv-reader/bin/
 
 poison-message-csv-reader/obj/
+
+poison-message-csv-reader/PoisonMessages.csv
